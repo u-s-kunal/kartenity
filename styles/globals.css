@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+button {
+  padding: 10px;
+  margin: 10px;
+  border: 2px solid #ededed;
+  cursor: pointer;
+}
+input {
+  padding: 10px;
+  margin: 10px;
+  border: 2px solid #ededed;
+  cursor: pointer;
+}
