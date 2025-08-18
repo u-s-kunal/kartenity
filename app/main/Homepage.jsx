@@ -4,6 +4,7 @@ import Link from "next/link";
 import Search from "./Search";
 
 import { ShoppingCart } from "lucide-react";
+import Image from "next/image";
 
 export default function HomePage() {
   const categories = [
@@ -28,12 +29,14 @@ export default function HomePage() {
       {/* Tagline */}
       <div className="container flex flex-col items-center justify-start px-4 py-10 m-auto rounded-4xl shadow-2xl">
         <header className="text-center mb-10 ">
-          <span className=" text-4xl  m-4  md:text-8xl  font-bold text-gray-100 justify-center drop-shadow-sm flex">
-            Welcome to KartEnity <ShoppingCart size={38} />
-          </span>
-          <p className="text-gray-200 text-lg md:text-2xl mt-2">
+          <span className=" text-4xl  md:text-8xl  font-bold text-gray-100 justify-center drop-shadow-sm flex">
+            {/* Welcome to KartEnity <ShoppingCart size={38} /> */}
+            <Image src="/logo.png" width={500} height={100} alt="KartEnity
+            "></Image>
+          <p className="text-gray-200 text-lg md:text-2xl absolute font-light  right-0 mt-4 top-20 ">
             Find everything you need in one place!
           </p>
+          </span>
         </header>
         <div className="w-full max-w-xl mb-10">
           <Search />

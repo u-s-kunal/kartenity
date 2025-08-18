@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
+
 import { useState } from "react";
 import {
   BoxIcon,
@@ -31,12 +33,10 @@ export default function Navbar() {
 
   return (
     <nav className="bg-gray-800 text-white shadow-md p-3">
-      <div className=" mx-auto flex justify-between items-center">
+      <div className=" mx-auto flex justify-center items-center">
         {/* Mobile Header */}
         <div className="md:hidden flex justify-between items-center w-full">
-          <Link href="/" className="flex items-center text-xl font-bold gap-1 text-white">
-            KartEnity
-          </Link>
+          
           <Link
             href="/pages/cart"
             className="flex bg-gray-600 px-1 py-2 rounded-full items-center text-md font-md gap-1 text-white"
@@ -50,11 +50,11 @@ export default function Navbar() {
         </div>
 
         {/* Desktop Menu */}
-        <ul className="hidden md:flex items-center gap-6">
-          <Link href="/" className="flex items-center text-xl font-extrabold gap-2 hover:text-amber-400">
-            KartEnity
-          </Link>
+        <ul className="hidden md:flex items-center p-2  ">
 
+           <div className="hidden md:flex mr-8 ">{pathname !== "/" && <Link href="/"><Image src="/logo.png" width={120} height={20} alt="KartEnity
+                       "></Image> </Link>  }</div>
+        <div className="links flex gap-6">
           <NavLink href="/" icon={<HomeIcon size={18} />} label="Home" />
           <NavLink
             href="/pages/cart"
@@ -65,11 +65,12 @@ export default function Navbar() {
           <NavLink href="/pages/contact" icon={<Contact size={18} />} label="Contact" />
           <NavLink href="/pages/orders" icon={<BoxIcon size={18} />} label="Orders" />
           <NavLink href="/pages/dashboard" icon={<PlusIcon size={18} />} label="Dashboard" />
-          <NavLink href="/pages/wishlist" icon={<HeartPlusIcon size={18} />} label="wishlist" />
+            <NavLink href="/pages/wishlist" icon={<HeartPlusIcon size={18} />} label="wishlist" />
+            </div>
         </ul>
 
         {/* Desktop Search */}
-        <div className="hidden md:flex">{pathname !== "/" && <Search />}</div>
+        <div className="hidden md:flex mx-6">{pathname !== "/" && <Search />}</div>
       </div>
 
       {/* Mobile Dropdown */}
