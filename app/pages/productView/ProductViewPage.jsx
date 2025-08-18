@@ -225,7 +225,8 @@ const ProductViewPage = () => {
               <div
                 key={rp._id}
                 className="bg-white rounded-lg shadow-md p-4 flex flex-col items-center text-black cursor-pointer hover:shadow-lg transition"
-                onClick={() => router.push(`/productView?id=${rp._id}`)} // ✅ fixed path
+                onClick={() => router.push(`/pages/productView?id=${rp._id}`)}
+
               >
                 {rp.image && (
                   <img
