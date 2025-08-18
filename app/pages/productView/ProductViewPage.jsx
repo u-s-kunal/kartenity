@@ -78,7 +78,7 @@ const ProductViewPage = () => {
           {product.images?.length > 1 && (
             <div className="flex gap-3 overflow-x-auto">
               {product.images.map((imgUrl, idx) => {
-                const imgPath = `${API_URL}${imgUrl}`;
+            const imgPath = `/uploads/${imgUrl.split("/").pop()}`;
                 return (
                   <img
                     key={idx}
