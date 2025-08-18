@@ -1,14 +1,17 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { addToCart, removeFromCart } from "../../main/cartSlice";
 import { useSearchParams, useRouter } from "next/navigation";
 
+// Helper: format INR
 const formatINR = (num) =>
   num.toLocaleString("en-IN", { minimumFractionDigits: 0 });
 
- const ProductViewPage = () => {
+const API_URL = process.env.NEXT_PUBLIC_API_URL || ""; // ✅ Use env var for Vercel
+
+const ProductViewPage = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const searchParams = useSearchParams();
@@ -24,7 +27,7 @@ const formatINR = (num) =>
 
   useEffect(() => {
     if (product?.image) {
-      setMainImage(`http://localhost:5000${product.image}`);
+      setMainImage(`${API_URL}${product.image}`);
     }
   }, [product]);
 
@@ -54,8 +57,6 @@ const formatINR = (num) =>
   );
 
   return (
-    <Suspense fallback={<div className="text-white">Loading...</div>}>
-
     <div className="min-h-[92vh] p-6 bg-gradient-to-br from-gray-900 to-green-800 text-white">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
         {/* Product Images */}
@@ -77,7 +78,7 @@ const formatINR = (num) =>
           {product.images?.length > 1 && (
             <div className="flex gap-3 overflow-x-auto">
               {product.images.map((imgUrl, idx) => {
-                const imgPath = `http://localhost:5000${imgUrl}`;
+                const imgPath = `${API_URL}${imgUrl}`;
                 return (
                   <img
                     key={idx}
@@ -224,11 +225,11 @@ const formatINR = (num) =>
               <div
                 key={rp._id}
                 className="bg-white rounded-lg shadow-md p-4 flex flex-col items-center text-black cursor-pointer hover:shadow-lg transition"
-                onClick={() => router.push(`/pages/productView?id=${rp._id}`)}
+                onClick={() => router.push(`/productView?id=${rp._id}`)} // ✅ fixed path
               >
                 {rp.image && (
                   <img
-                    src={`http://localhost:5000${rp.image}`}
+                    src={`${API_URL}${rp.image}`}
                     alt={rp.name}
                     className="w-full h-36 object-contain mb-3"
                   />
@@ -244,12 +245,8 @@ const formatINR = (num) =>
           </div>
         </div>
       )}
-      </div>
-    </Suspense>
-      
+    </div>
   );
 };
-
-
 
 export default ProductViewPage;
