@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "/styles/globals.css";
 import Navbar from "./main/Navbar";
 import ReduxProvider from "./redux-provider"; // ✅ use this
+import Footer from "./main/Footer";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({
@@ -19,8 +20,12 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      > <ReduxProvider> <Navbar /></ReduxProvider>
-        <ReduxProvider>{children}</ReduxProvider>
+      >
+        <ReduxProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </ReduxProvider>
       </body>
     </html>
   );

@@ -5,14 +5,30 @@
   --foreground: #171717;
 }
 button {
-  padding: 10px;
-  margin: 10px;
   border: 2px solid #ededed;
   cursor: pointer;
 }
 input {
   padding: 10px;
-  margin: 10px;
   border: 2px solid #ededed;
   cursor: pointer;
+}
+
+li {
+  list-style-type: none;
+}
+
+@keyframes pulse-slow {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+.animate-pulse-slow {
+  animation: pulse-slow 2s infinite ease-in-out;
 }

@@ -2,108 +2,125 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import {useSelector} from "react-redux"
-import { Menu, X } from "lucide-react";
-import { ShoppingCart } from "lucide-react";
+import {
+  BoxIcon,
+  Contact,
+  HeartPlusIcon,
+  HomeIcon,
+  Menu,
+  PlusIcon,
+  ShoppingCart,
+  X,
+} from "lucide-react";
+import { usePathname } from "next/navigation";
+import { useSelector } from "react-redux";
+import Search from "./Search";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  
-const cartQuantity = useSelector((state) => state.cart.quantity);
+  const pathname = usePathname();
+
+  // Read cart from Redux state
+  const reduxCart = useSelector((state) => state.cart);
+
+  // Compute total quantity from Redux cart items
+  const cartQuantity = reduxCart.reduce((total, item) => total + item.quantity, 0);
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
 
   return (
-    <nav className="bg-gray-700 text-white shadow-md   p-0 md:py-4 ">
-      <div className="   mx-auto flex justify-between  ">
-        <div className="md:hidden flex items-center w-full ml-2 justify-between px-2   shadow sticky top-0 z-50">
-          <Link
-            href="/"
-            className="flex items-center text-xl font-extrabold text-white"
-          >
-            <span>KartEnity</span> <ShoppingCart size={18} />
+    <nav className="bg-gray-800 text-white shadow-md p-3">
+      <div className=" mx-auto flex justify-between items-center">
+        {/* Mobile Header */}
+        <div className="md:hidden flex justify-between items-center w-full">
+          <Link href="/" className="flex items-center text-xl font-bold gap-1 text-white">
+            KartEnity
           </Link>
-
-          <button
-            aria-label="Toggle Menu"
-            className="outline-none"
-            onClick={toggleMenu}
+          <Link
+            href="/pages/cart"
+            className="flex bg-gray-600 px-1 py-2 rounded-full items-center text-md font-md gap-1 text-white"
           >
+            <ShoppingCart size={22} />
+            <p className="bg-red-700 rounded-full px-2">{cartQuantity}</p>
+          </Link>
+          <button onClick={toggleMenu} aria-label="Toggle Menu">
             {isOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
         </div>
 
-        <ul className="hidden md:flex space-x-8 items-center  ">
-          <Link
-            href="/"
-            className="gap-x-1 text-xl flex font-bold  px-3 py-1 rounded-2xl "
-          >
-            <span>KartEnity</span> <ShoppingCart size={18} />
+        {/* Desktop Menu */}
+        <ul className="hidden md:flex items-center gap-6">
+          <Link href="/" className="flex items-center text-xl font-extrabold gap-2 hover:text-amber-400">
+            KartEnity
           </Link>
-          <li>
-            <Link href="/">Home</Link>
-          </li>
 
-          <li>
-            <Link href="/pages/cart">Cart</Link> <span>{cartQuantity}</span>
-          </li>
-          <li>
-            <Link href="/pages/contact" onClick={closeMenu}>
-              Contact us
-            </Link>
-          </li>
-          <li>
-            <Link href="/pages/productForm" onClick={closeMenu}>
-              Add Products
-            </Link>
-          </li>
+          <NavLink href="/" icon={<HomeIcon size={18} />} label="Home" />
+          <NavLink
+            href="/pages/cart"
+            icon={<ShoppingCart size={20} />}
+            label="Cart"
+            badge={cartQuantity}
+          />
+          <NavLink href="/pages/contact" icon={<Contact size={18} />} label="Contact" />
+          <NavLink href="/pages/orders" icon={<BoxIcon size={18} />} label="Orders" />
+          <NavLink href="/pages/dashboard" icon={<PlusIcon size={18} />} label="Dashboard" />
+          <NavLink href="/pages/wishlist" icon={<HeartPlusIcon size={18} />} label="wishlist" />
         </ul>
+
+        {/* Desktop Search */}
+        <div className="hidden md:flex">{pathname !== "/" && <Search />}</div>
       </div>
 
       {/* Mobile Dropdown */}
-
       {isOpen && (
-        <ul className="md:hidden flex flex-col space-y-2 mt-3 ml-1">
-          <li>
-            {" "}
-            <form className=" ">
-              <input
-                type="text"
-                placeholder="Search products..."
-                className=" rounded-l-md text-black bg-amber-50 "
-              />
-              <button
-                type="submit"
-                className="bg-gray-800  rounded-r-md hover:bg-gray-400 border-none"
-              >
-                Search
-              </button>
-            </form>
-          </li>
+        <div className="md:hidden mt-3 space-y-3">
+          {pathname !== "/" && (
+            <div className="px-3">
+              <Search />
+            </div>
+          )}
 
-          <li className="p-3 hover:bg-gray-400">
-            <Link href="/" onClick={closeMenu}>
-              Home
-            </Link>
-          </li>
-          <li className="p-3 hover:bg-gray-400">
-            <Link href="/pages/cart" onClick={closeMenu}>
-              Cart
-            </Link>
-          </li>
-          <li className="p-3 hover:bg-gray-400">
-            <Link href="/pages/contact" onClick={closeMenu}>
-              Contact us
-            </Link>
-          </li>
-          <li className="p-3 hover:bg-gray-400">
-            <Link href="/pages/productForm" onClick={closeMenu}>
-              Add Products
-            </Link>
-          </li>
-        </ul>
+          <MobileLink href="/" label="Home" onClick={closeMenu} />
+          <MobileLink href="/pages/contact" label="Contact" onClick={closeMenu} />
+          <MobileLink href="/pages/orders" label="Orders" onClick={closeMenu} />
+          <MobileLink href="/pages/dashboard" label="Dashboard" onClick={closeMenu} />
+          <MobileLink href="/pages/wishlist" label="wishlist" onClick={closeMenu} />
+        </div>
       )}
     </nav>
+  );
+}
+
+// === Reusable Desktop Nav Link ===
+function NavLink({ href, icon, label, badge }) {
+  return (
+    <li className="relative">
+      <Link
+        href={href}
+        className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-700 hover:bg-gray-600 transition"
+      >
+        {icon}
+        <span className="text-sm font-medium">{label}</span>
+        {badge > 0 && (
+          <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+            {badge}
+          </span>
+        )}
+      </Link>
+    </li>
+  );
+}
+
+// === Reusable Mobile Nav Link ===
+function MobileLink({ href, label, onClick }) {
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className="block px-4 py-3 bg-gray-700 hover:bg-gray-600 rounded-md text-white transition text-base"
+    >
+      {label}
+    </Link>
   );
 }

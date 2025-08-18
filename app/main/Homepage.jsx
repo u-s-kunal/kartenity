@@ -15,7 +15,7 @@ export default function HomePage() {
     { name: "Beauty", icon: "💄" },
     { name: "Fashion", icon: "👗" },
     { name: "Appliances", icon: "🔌" },
-    { name: "Kitchenware", icon: "🍽️" },
+    { name: "Home & Kitchen", icon:"🏠" },
     { name: "Vehicles", icon: "🚗" },
     { name: "Bathroom", icon: "🛁" },
     { name: "Cleaning", icon: "🧹" },
@@ -24,14 +24,14 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="min-h-[92vh] bg-gradient-to-bl  from-blue-400  to-pink-400  flex flex-col items-center justify-start  ">
+    <div className="min-h-[92vh] bg-gradient-to-b  from-gray-600  to-purple-600   flex flex-col items-center justify-start  ">
       {/* Tagline */}
       <div className="container flex flex-col items-center justify-start px-4 py-10 m-auto rounded-4xl shadow-2xl">
         <header className="text-center mb-10 ">
           <span className=" text-4xl  m-4  md:text-8xl  font-bold text-gray-100 justify-center drop-shadow-sm flex">
             Welcome to KartEnity <ShoppingCart size={38} />
           </span>
-          <p className="text-gray-600 text-lg md:text-2xl mt-2">
+          <p className="text-gray-200 text-lg md:text-2xl mt-2">
             Find everything you need in one place!
           </p>
         </header>
@@ -41,7 +41,7 @@ export default function HomePage() {
 
         {/* Categories */}
         <section className="w-full max-w-5xl text-center">
-          <h2 className="text-2xl font-semibold text-gray-700 mb-6">
+          <h2 className="text-2xl font-semibold text-white mb-6">
             🛍️ Shop by Category
           </h2>
           <div className="flex flex-wrap justify-center gap-6">

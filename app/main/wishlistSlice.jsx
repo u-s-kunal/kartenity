@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const cartSlice = createSlice({
-  name: "cart",
+const wishlistSlice = createSlice({
+  name: "wishlist",
   initialState: [],
   reducers: {
-    addToCart: (state, action) => {
+    addToWish: (state, action) => {
       const existing = state.find((item) => item._id === action.payload._id);
       if (existing) {
         existing.quantity += 1;
@@ -13,7 +13,7 @@ const cartSlice = createSlice({
       }
     },
 
-    removeFromCart: (state, action) => {
+    removeFromWish: (state, action) => {
       const _id = action.payload;
       const index = state.findIndex((item) => item._id === _id);
       if (index !== -1) {
@@ -25,13 +25,13 @@ const cartSlice = createSlice({
       }
     },
 
-    clearCart: () => {
-      // Simply return an empty array to clear the cart
+    clearWish: () => {
+      // Simply return an empty array to clear the wish
       return [];
     },
   },
 });
 
-export const { addToCart, removeFromCart, clearCart } = cartSlice.actions;
+export const { addToWish, removeFromWish, clearWish } = wishlistSlice.actions;
 
-export default cartSlice.reducer;
+export default wishlistSlice.reducer;
