@@ -8,25 +8,25 @@ import { useSearchParams, useRouter } from "next/navigation";
 const formatINR = (num) =>
   num.toLocaleString("en-IN", { minimumFractionDigits: 0 });
 
-const ProductViewPage = () => {
+export const ProductViewPage = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const searchParams = useSearchParams();
   const productId = searchParams.get("id");
+
   const products = useSelector((state) => state.products) || [];
   const cart = useSelector((state) => state.cart) || [];
 
   const product = products.find((p) => p._id === productId);
+  const cartItem = cart.find((item) => item._id === product?._id);
+
   const [mainImage, setMainImage] = useState("");
 
-  // ✅ Dynamic API base (works on localhost & production)
-  const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
-
   useEffect(() => {
-    if (product) {
-      setMainImage(product.image ? `${API_BASE}${product.image}` : "");
+    if (product?.image) {
+      setMainImage(`http://localhost:5000${product.image}`);
     }
-  }, [product, API_BASE]);
+  }, [product]);
 
   if (!product) {
     return (
@@ -36,7 +36,7 @@ const ProductViewPage = () => {
     );
   }
 
-  const cartItem = cart.find((item) => item._id === product._id);
+  // Price & Discount Handling
   const price = product.price;
   const discount = product.discount || 0;
   const discountType = product.discountType || "%";
@@ -44,7 +44,9 @@ const ProductViewPage = () => {
   let finalPrice = price;
   if (discount) {
     finalPrice =
-      discountType === "%" ? price - price * (discount / 100) : price - discount;
+      discountType === "%"
+        ? price - price * (discount / 100)
+        : price - discount;
   }
 
   const relatedProducts = products.filter(
@@ -52,9 +54,9 @@ const ProductViewPage = () => {
   );
 
   return (
-    <div className="min-h-[92vh] p-6 bg-gradient-to-br from-gray-900 to-green-800 text-white mx-auto">
+    <div className="min-h-[92vh] p-6 bg-gradient-to-br from-gray-900 to-green-800 text-white">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-        {/* ---------- Left: Images ---------- */}
+        {/* Product Images */}
         <div>
           <div className="border rounded-lg overflow-hidden mb-6 bg-white">
             {mainImage ? (
@@ -70,26 +72,29 @@ const ProductViewPage = () => {
             )}
           </div>
 
-          {product.images && product.images.length > 1 && (
+          {product.images?.length > 1 && (
             <div className="flex gap-3 overflow-x-auto">
-              {product.images.map((imgUrl, idx) => (
-                <img
-                  key={idx}
-                  src={`${API_BASE}${imgUrl}`}
-                  alt={`${product.name} image ${idx + 1}`}
-                  className={`h-20 w-20 object-contain rounded cursor-pointer border-2 ${
-                    mainImage === `${API_BASE}${imgUrl}`
-                      ? "border-indigo-500"
-                      : "border-transparent"
-                  } transition`}
-                  onClick={() => setMainImage(`${API_BASE}${imgUrl}`)}
-                />
-              ))}
+              {product.images.map((imgUrl, idx) => {
+                const imgPath = `http://localhost:5000${imgUrl}`;
+                return (
+                  <img
+                    key={idx}
+                    src={imgPath}
+                    alt={`${product.name} ${idx + 1}`}
+                    className={`h-20 w-20 object-contain rounded cursor-pointer border-2 ${
+                      mainImage === imgPath
+                        ? "border-indigo-500"
+                        : "border-transparent"
+                    } transition`}
+                    onClick={() => setMainImage(imgPath)}
+                  />
+                );
+              })}
             </div>
           )}
         </div>
 
-        {/* ---------- Right: Product Info ---------- */}
+        {/* Product Details */}
         <div className="md:col-span-2 flex flex-col justify-between">
           <div>
             <h1 className="text-4xl font-extrabold mb-3">{product.name}</h1>
@@ -140,9 +145,7 @@ const ProductViewPage = () => {
                     ₹{formatINR(price)}
                   </p>
                   <span className="bg-red-600 text-sm px-2 py-1 rounded font-semibold">
-                    {discountType === "%"
-                      ? `${discount}% OFF`
-                      : `₹${discount} OFF`}
+                    {discountType === "%" ? `${discount}% OFF` : `₹${discount} OFF`}
                   </span>
                 </>
               )}
@@ -172,8 +175,7 @@ const ProductViewPage = () => {
               )}
               {product.weight && (
                 <div>
-                  <span className="font-semibold">Weight:</span>{" "}
-                  {product.weight}
+                  <span className="font-semibold">Weight:</span> {product.weight}
                 </div>
               )}
             </div>
@@ -209,7 +211,7 @@ const ProductViewPage = () => {
         </div>
       </div>
 
-      {/* ---------- Related Products ---------- */}
+      {/* Related Products */}
       {relatedProducts.length > 0 && (
         <div className="mt-16">
           <h2 className="text-3xl font-extrabold mb-6 border-b border-green-400 pb-2">
@@ -224,7 +226,7 @@ const ProductViewPage = () => {
               >
                 {rp.image && (
                   <img
-                    src={`${API_BASE}${rp.image}`}
+                    src={`http://localhost:5000${rp.image}`}
                     alt={rp.name}
                     className="w-full h-36 object-contain mb-3"
                   />
@@ -243,6 +245,8 @@ const ProductViewPage = () => {
     </div>
   );
 };
+
+
 
 export default function ProductViewWrapper() {
   return (
