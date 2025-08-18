@@ -8,7 +8,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 const formatINR = (num) =>
   num.toLocaleString("en-IN", { minimumFractionDigits: 0 });
 
-export const ProductViewPage = () => {
+ const ProductViewPage = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const searchParams = useSearchParams();
@@ -54,6 +54,8 @@ export const ProductViewPage = () => {
   );
 
   return (
+    <Suspense fallback={<div className="text-white">Loading...</div>}>
+
     <div className="min-h-[92vh] p-6 bg-gradient-to-br from-gray-900 to-green-800 text-white">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
         {/* Product Images */}
@@ -242,16 +244,12 @@ export const ProductViewPage = () => {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </Suspense>
+      
   );
 };
 
 
 
-export default function ProductViewWrapper() {
-  return (
-    <Suspense fallback={<div className="text-white">Loading...</div>}>
-      <ProductViewPage />
-    </Suspense>
-  );
-}
+export default ProductViewPage;
