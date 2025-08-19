@@ -23,22 +23,27 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="min-h-[80vh] md:min-h-[92vh]  bg-gradient-to-b from-gray-600 to-purple-600 flex flex-col items-center justify-start px-2">
+    <div className="min-h-[80vh] md:min-h-[92vh]  bg-gradient-to-b from-gray-600 to-purple-600 flex flex-col items-center  px-2">
       {/* Tagline */}
-      <div className="container flex flex-col items-center justify-start py-8 sm:py-1 m-auto rounded-3xl  shadow-none bg-white/10">
-        <header className="text-center mb-6 sm:mb-10 relative w-full">
-          <div className="flex flex-col items-center">
+      <div className="container flex flex-col items-center  sm:py-1 m-auto rounded-3xl bg-white/10">
+        <header className="text-center  sm:mb-10  w-full flex justify-center">
+
+
+          <div className="flex flex-col items-center mr-6 relative">
             <Image
-              src="/logo.png"
-              width={300}
-              height={80}
+              src={"/logo.svg"}
+              width={620}
+              height={260}
               alt="KartEnity"
-              className="w-2/3 sm:w-full h-auto"
-            />
-            <p className="text-gray-200 text-sm sm:text-lg mt-4 text-center max-w-xs sm:max-w-md">
+              className="mt-12  mb-12 md:mb-0 p-6 md:p-0 "
+            ></Image>
+            <p className="text-gray-200 text-md sm:text-lg 
+             md:bottom-4 md:right-20 bottom-6  text-center max-w-xs sm:max-w-md absolute">
               Find everything you need in one place!
             </p>
           </div>
+
+
         </header>
 
         <div className="w-full max-w-md mb-6 sm:mb-10 px-4">

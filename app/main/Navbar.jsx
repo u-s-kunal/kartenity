@@ -32,28 +32,30 @@ export default function Navbar() {
   const closeMenu = () => setIsOpen(false);
 
   return (
-    <nav className="bg-gray-800 text-white shadow-md p-3">
-      <div className=" mx-auto flex justify-center items-center">
+    <nav className="bg-gray-800 text-white shadow-md ">
+      <div className=" mx-auto flex justify-center items-center  ">
         {/* Mobile Header */}
-        <div className="md:hidden flex justify-between items-center w-full">
-          
-          <Link
-            href="/pages/cart"
-            className="flex bg-gray-600 px-1 py-2 rounded-full items-center text-md font-md gap-1 text-white"
-          >
-            <ShoppingCart size={22} />
-            <p className="bg-red-700 rounded-full px-2">{cartQuantity}</p>
-          </Link>
-          <button onClick={toggleMenu} aria-label="Toggle Menu">
-            {isOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
+
+        <div className="flex justify-between items-center w-full md:hidden  ">
+          {pathname === "/" ? <Link href="/"><Image src="/logo.png" width={120} height={20} alt="KartEnity" className="invisible md:hidden "></Image> </Link> :  <Link href="/"><Image src="/logo.png" width={120} height={20} alt="KartEnity" className="visible mx-2"></Image> </Link>}
+
+        <div className="flex gap-3 p-3 right-0 ">
+            <Link
+              href="/pages/cart"
+              className="flex bg-gray-600 px-1 py-2 rounded-full items-center text-md font-md gap-1 text-white">
+              <ShoppingCart size={22} />
+              <p className="bg-red-700 rounded-full px-2">{cartQuantity}</p>
+            </Link>
+              
+              <span onClick={toggleMenu} aria-label="Toggle Menu" className="p-1 mx-2  rounded border-none">
+                {isOpen ? <X size={28} /> : <Menu size={28} />}
+              </span>
+            </div>
         </div>
 
         {/* Desktop Menu */}
-        <ul className="hidden md:flex items-center p-2  ">
+        <ul className="hidden md:flex items-center p-4  ">
 
-           <div className="hidden md:flex mr-8 ">{pathname !== "/" && <Link href="/"><Image src="/logo.png" width={120} height={20} alt="KartEnity
-                       "></Image> </Link>  }</div>
         <div className="links flex gap-6">
           <NavLink href="/" icon={<HomeIcon size={18} />} label="Home" />
           <NavLink
@@ -74,6 +76,8 @@ export default function Navbar() {
       </div>
 
       {/* Mobile Dropdown */}
+    
+
       {isOpen && (
         <div className="md:hidden mt-3 space-y-3">
           {pathname !== "/" && (
@@ -81,7 +85,7 @@ export default function Navbar() {
               <Search />
             </div>
           )}
-
+          
           <MobileLink href="/" label="Home" onClick={closeMenu} />
           <MobileLink href="/pages/contact" label="Contact" onClick={closeMenu} />
           <MobileLink href="/pages/orders" label="Orders" onClick={closeMenu} />
