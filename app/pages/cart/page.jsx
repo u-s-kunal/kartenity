@@ -57,7 +57,7 @@ const handleRemove = (id) => {
                 <div className="flex items-center w-[50%]">
                   {item.image && (
                     <img
-                      src={`http://localhost:5000${item.image}`}
+                      src={`${process.env.NEXT_PUBLIC_API_URL}${item.image}`}
                       alt={item.name}
                       className="w-full md:h-26 h-20 object-contain"
                     />
