@@ -147,7 +147,7 @@ const CheckoutPage = () => {
   console.log("Saving order:", order);
 
   try {
-    const response = await fetch("http://localhost:5000/api/Orders", {  // use full backend URL
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Orders`, {  // use full backend URL
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(order),

@@ -21,7 +21,7 @@ function OrderManager() {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/orders/${orderId}/status`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/orders/${orderId}/status`,
         {
           method: "PUT",
           headers: {
