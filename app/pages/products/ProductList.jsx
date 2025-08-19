@@ -17,7 +17,7 @@ function ProductList() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/products");
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`);
         if (!res.ok) throw new Error("Failed to fetch products");
         const data = await res.json();
         dispatch(setProducts(data));
@@ -133,7 +133,7 @@ function ProductList() {
 
                 {product.image && (
                   <img
-                    src={`http://localhost:5000${product.image}`}
+                    src={`${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
                     alt={product.name}
                     className="w-full h-40 object-contain"
                   />
