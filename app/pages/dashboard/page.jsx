@@ -126,6 +126,7 @@ function Dashboard() {
             <option value="Cleaning">Cleaning</option>
             <option value="Groceries">Groceries</option>
             <option value="Jewellery">Jewellery</option>
+            <option value="Others">Others</option>
           </select>
 
           <input
