@@ -14,7 +14,7 @@ export default function HomePage() {
     { name: "Beauty", icon: "💄" },
     { name: "Fashion", icon: "👗" },
     { name: "Appliances", icon: "🔌" },
-    { name: "Home & Kitchen", icon:"🏠" },
+    { name: "Home & Kitchen", icon: "🏠" },
     { name: "Vehicles", icon: "🚗" },
     { name: "Bathroom", icon: "🛁" },
     { name: "Cleaning", icon: "🧹" },
@@ -23,39 +23,33 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="min-h-[80vh] md:min-h-[92vh]  bg-gradient-to-b from-gray-600 to-purple-600 flex flex-col items-center  px-2">
-      {/* Tagline */}
-      <div className="container flex flex-col items-center  sm:py-1 m-6 rounded-3xl bg-white/10">
-        <header className="text-center  sm:mb-10  w-full flex justify-center">
-
-
-          <div className="flex flex-col items-center mr-6 relative">
-            <Image
-              src={"/logo.svg"}
-              width={620}
-              height={260}
-              alt="KartEnity"
-              className="mt-12  mb-12 md:mb-0 p-6 md:p-0 "
-            ></Image>
-            <p className="text-gray-200 text-md sm:text-lg 
-             md:bottom-4 md:right-20 bottom-6  text-center max-w-xs sm:max-w-md absolute">
-              Find everything you need in one place!
-            </p>
-          </div>
-
-
+    <div className="min-h-[80vh] md:min-h-[92vh] bg-gradient-to-b from-gray-600 to-purple-600 flex flex-col items-center px-2">
+      {/* Container */}
+      <div className="container flex flex-col items-center sm:py-1 m-6  w-full">
+        
+        {/* Logo + Tagline */}
+        <header className="flex flex-col items-center w-full text-center p-6  ">
+          <Image
+            src={"/logo.svg"}
+            width={520}
+            height={140}
+            alt="KartEnity"
+            className="m-4"
+          />
+        
         </header>
 
+        {/* Search */}
         <div className="w-full max-w-md mb-6 sm:mb-10 px-4">
           <Search />
         </div>
 
         {/* Categories */}
-        <section className= " categories p-4 w-full max-w-5xl text-center ">
+        <section className="categories p-4 w-full max-w-5xl text-center">
           <h2 className="text-xl sm:text-2xl font-semibold text-white mb-4 sm:mb-6">
             🛍️ Shop by Category
           </h2>
-          <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 sm:gap-6">
             {categories.map((cat, index) => (
               <Link
                 key={index}
@@ -66,7 +60,7 @@ export default function HomePage() {
                 }}
                 passHref
               >
-                <div className="w-20 h-20 sm:w-24 sm:h-24 flex flex-col items-center justify-center bg-white shadow-md hover:shadow-2xl rounded-xl p-2 sm:p-3 hover:scale-105 transition-transform cursor-pointer">
+                <div className="w-24 h-24 sm:w-28 sm:h-28 flex flex-col items-center justify-center bg-white shadow-md hover:shadow-2xl rounded-xl p-2 sm:p-3 hover:scale-105 transition-transform cursor-pointer">
                   <div className="text-2xl sm:text-3xl">{cat.icon}</div>
                   <span className="mt-1 sm:mt-2 text-xs sm:text-sm text-gray-700 text-center">
                     {cat.name}
