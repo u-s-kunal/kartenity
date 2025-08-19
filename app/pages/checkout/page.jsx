@@ -41,10 +41,10 @@ const loadRazorpayScript = () => {
   });
 };
 
-// ---- New email sending function added here ----
+// ---- New email sending function ----
 const sendOrderEmail = async (order) => {
   try {
-    const response = await fetch("http://localhost:5000/api/email/send-order-email", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/email/send-order-email`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ order }),
@@ -63,7 +63,6 @@ const sendOrderEmail = async (order) => {
   }
 };
 
-
 const CheckoutPage = () => {
   const dispatch = useDispatch();
   const reduxCart = useSelector((state) => state.cart);
@@ -76,15 +75,12 @@ const CheckoutPage = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-
   const [orderPlacedMsg, setOrderPlacedMsg] = useState("");
 
-  // Load from Redux when available
   useEffect(() => {
     setCart(reduxCart);
   }, [reduxCart]);
 
-  // ✅ Load from localStorage on refresh
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
     if (storedCart) {
@@ -126,49 +122,42 @@ const CheckoutPage = () => {
   };
 
   const saveOrderPaymentDetails = async (payment_id, razorpay_order_id) => {
-  const order = {
-    orderId: razorpay_order_id,
-    paymentId: payment_id,
-    customer: { fullName, email, phone, address },
-    items: cart,
-    pricing: {
-      subtotal,
-      shipping,
-      taxAmount,
-      discountAmount,
-      total,
-      couponCode: couponCode.trim().toUpperCase(),
-    },
-    payment: "Paid",
-    orderStatus:"pending",
-    orderDate: new Date().toISOString(),
-  };
+    const order = {
+      orderId: razorpay_order_id,
+      paymentId: payment_id,
+      customer: { fullName, email, phone, address },
+      items: cart,
+      pricing: {
+        subtotal,
+        shipping,
+        taxAmount,
+        discountAmount,
+        total,
+        couponCode: couponCode.trim().toUpperCase(),
+      },
+      payment: "Paid",
+      orderStatus: "pending",
+      orderDate: new Date().toISOString(),
+    };
 
-  console.log("Saving order:", order);
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Orders`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(order),
+      });
 
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/Orders`, {  // use full backend URL
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(order),
-    });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to save order");
+      }
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Failed to save order");
+      const savedOrder = await response.json();
+      sendOrderEmail(savedOrder);
+    } catch (error) {
+      console.error("Save order error:", error.message);
     }
-
-    const savedOrder = await response.json();
-
-    sendOrderEmail(savedOrder);
-
-  } catch (error) {
-    console.error("Save order error:", error.message);
-    // Show toast or UI error here
-  }
-};
-
-
+  };
 
   const initiateRazorpayPayment = async () => {
     const res = await loadRazorpayScript();
@@ -206,9 +195,7 @@ const CheckoutPage = () => {
         },
         handler: function (response) {
           toast.success(`Payment successful! Payment ID: ${response.razorpay_payment_id}`);
-
           saveOrderPaymentDetails(response.razorpay_payment_id, response.razorpay_order_id);
-
           dispatch(clearCart());
           localStorage.removeItem("cart");
           setCart([]);
@@ -258,19 +245,19 @@ const CheckoutPage = () => {
   return (
     <>
       <ToastContainer position="top-right" autoClose={4000} hideProgressBar />
-      <div className="min-h-screen bg-gradient-to-br from-stone-800 to-orange-800 p-6 text-white">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-6">
-          {/* Cart Summary Card */}
-          <div className="bg-transparent shadow-2xl rounded-2xl p-6">
-            <h2 className="text-2xl font-semibold mb-4 text-white">Your Cart</h2>
+      <div className="min-h-screen bg-gradient-to-br from-stone-800 to-orange-800 p-4 sm:p-6 text-white">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Cart Summary */}
+          <div className="bg-transparent shadow-2xl rounded-2xl p-4 sm:p-6">
+            <h2 className="text-xl sm:text-2xl font-semibold mb-4">Your Cart</h2>
             {cart.length === 0 ? (
-              <p className="">No products in cart.</p>
+              <p>No products in cart.</p>
             ) : (
               <div className="space-y-4">
                 {cart.map((item) => (
                   <div
                     key={item._id}
-                    className="flex justify-between items-center border-b pb-2"
+                    className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b pb-2"
                   >
                     <div className="flex items-center gap-4">
                       {item.image && (
@@ -285,20 +272,20 @@ const CheckoutPage = () => {
                         />
                       )}
                       <div>
-                        <h3 className="text-lg font-semibold text-gray-800">{item.name}</h3>
-                        <p className="text-sm text-white">Qty: {item.quantity}</p>
+                        <h3 className="text-lg font-semibold text-white">{item.name}</h3>
+                        <p className="text-sm text-gray-300">Qty: {item.quantity}</p>
                       </div>
                     </div>
-                    <p className="text-whitex font-medium">
+                    <p className="text-white font-medium">
                       ₹{formatINR(item.price * item.quantity)}
                     </p>
                   </div>
                 ))}
 
-                {/* Coupon Code */}
+                {/* Coupon */}
                 <form
                   onSubmit={handleApplyCoupon}
-                  className="mt-4 flex items-center space-x-2"
+                  className="mt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2"
                 >
                   <input
                     type="text"
@@ -308,11 +295,11 @@ const CheckoutPage = () => {
                       setCouponCode(e.target.value);
                       setCouponMessage("");
                     }}
-                    className="flex-grow px-3 py-2 rounded-md border focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="flex-grow px-3 py-2 rounded-md border w-full text-black focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition"
+                    className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition w-full sm:w-auto"
                   >
                     Apply
                   </button>
@@ -327,15 +314,15 @@ const CheckoutPage = () => {
                   </p>
                 )}
 
-                {/* Pricing Summary */}
-                <div className="mt-6 border-t pt-4 text-right space-y-2 text-white font-semibold">
+                {/* Pricing */}
+                <div className="mt-6 border-t pt-4 text-right space-y-2 font-semibold">
                   <p className="text-gray-300">Subtotal: ₹{formatINR(subtotal)}</p>
                   <p className="text-gray-300">Shipping: ₹{formatINR(shipping)}</p>
                   <p className="text-gray-300">GST (12%): ₹{formatINR(taxAmount)}</p>
                   {discountAmount > 0 && (
                     <p className="text-green-400">Discount: -₹{formatINR(discountAmount)}</p>
                   )}
-                  <p className="text-xl font-bold bg-black p-2 rounded">
+                  <p className="text-lg sm:text-xl font-bold bg-black p-2 rounded">
                     Total: ₹{formatINR(total > 0 ? total : 0)}
                   </p>
                 </div>
@@ -344,31 +331,31 @@ const CheckoutPage = () => {
           </div>
 
           {/* Shipping Form */}
-          <div className="bg-transparent shadow-2xl rounded-2xl p-6">
-            <h2 className="text-2xl font-semibold mb-4 text-white">Shipping Info</h2>
+          <div className="bg-transparent shadow-2xl rounded-2xl p-4 sm:p-6">
+            <h2 className="text-xl sm:text-2xl font-semibold mb-4">Shipping Info</h2>
             <form className="space-y-4" onSubmit={handlePlaceOrder}>
               <div>
-                <label className="block text-sm font-medium text-white">Full Name</label>
+                <label className="block text-sm font-medium">Full Name</label>
                 <input
                   type="text"
                   required
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500"
+                  className="w-full border rounded-lg px-4 py-2 text-black focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-white">Email</label>
+                <label className="block text-sm font-medium">Email</label>
                 <input
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500"
+                  className="w-full border rounded-lg px-4 py-2 text-black focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-white">Phone</label>
+                <label className="block text-sm font-medium">Phone</label>
                 <input
                   type="tel"
                   required
@@ -376,17 +363,17 @@ const CheckoutPage = () => {
                   title="Enter a valid 10-digit phone number"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500"
+                  className="w-full border rounded-lg px-4 py-2 text-black focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-white">Address</label>
+                <label className="block text-sm font-medium">Address</label>
                 <textarea
                   rows="3"
                   required
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
-                  className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500"
+                  className="w-full border rounded-lg px-4 py-2 text-black focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
 
