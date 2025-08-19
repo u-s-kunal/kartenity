@@ -10,9 +10,13 @@ const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 app.use(
   cors({
-    origin: "https://kartenity.vercel.app", // your frontend domain
+    origin: [
+      "http://localhost:3000", // allow local frontend
+      "https://kartenity.vercel.app", // allow deployed frontend
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
