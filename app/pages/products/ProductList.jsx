@@ -133,7 +133,7 @@ function ProductList() {
 
                 {product.image && (
                   <img
-                    src={`http://localhost:5000${product.image}`}
+                    src={`${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
                     alt={product.name}
                     className="w-full h-40 object-contain"
                   />
