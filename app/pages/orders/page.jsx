@@ -17,7 +17,7 @@ const Orders = () => {
   useEffect(() => {
   const fetchOrders = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/orders");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders`);
       if (!res.ok) {
         throw new Error("Failed to fetch orders");
       }

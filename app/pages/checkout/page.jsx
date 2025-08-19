@@ -179,7 +179,7 @@ const CheckoutPage = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/api/payment/orders", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/payment/orders`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount: Math.round(total * 100) }),
@@ -278,7 +278,7 @@ const CheckoutPage = () => {
                           src={
                             item.image.startsWith("http")
                               ? item.image
-                              : `http://localhost:5000${item.image}`
+                              : `${process.env.NEXT_PUBLIC_API_URL}${item.image}`
                           }
                           alt={item.name}
                           className="w-16 h-16 object-contain rounded"
