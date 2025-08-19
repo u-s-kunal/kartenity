@@ -25,7 +25,7 @@ export default function HomePage() {
   return (
     <div className="min-h-[80vh] md:min-h-[92vh]  bg-gradient-to-b from-gray-600 to-purple-600 flex flex-col items-center  px-2">
       {/* Tagline */}
-      <div className="container flex flex-col items-center  sm:py-1 m-auto rounded-3xl bg-white/10">
+      <div className="container flex flex-col items-center  sm:py-1 m-6 rounded-3xl bg-white/10">
         <header className="text-center  sm:mb-10  w-full flex justify-center">
 
 
@@ -51,7 +51,7 @@ export default function HomePage() {
         </div>
 
         {/* Categories */}
-        <section className="w-full max-w-5xl text-center">
+        <section className= " categories p-4 w-full max-w-5xl text-center ">
           <h2 className="text-xl sm:text-2xl font-semibold text-white mb-4 sm:mb-6">
             🛍️ Shop by Category
           </h2>

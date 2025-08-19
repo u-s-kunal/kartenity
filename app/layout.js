@@ -41,6 +41,7 @@ export const metadata = {
     locale: "en_IN",
     type: "website",
   },
+  metadataBase: new URL("https://kartenity.onrender.com"),
 };
 
 export default function RootLayout({ children }) {
