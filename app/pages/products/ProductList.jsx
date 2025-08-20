@@ -84,8 +84,8 @@ function ProductList() {
 
   if (loading) {
     return (
-      <div className="min-h-[92vh] flex items-center justify-center bg-gradient-to-r from-gray-700 to-green-600">
-        <div className="animate-spin rounded-full h-24 w-24 border-t-4 border-b-4 border-yellow-400"></div>
+      <div className="min-h-[92vh] flex items-center justify-center bg-gradient-to-r from-gray-700 to-green-800">
+        <div className="animate-spin rounded-full h-24 w-24 border-t-4 border-b-4 border-white"></div>
       </div>
     );
   }

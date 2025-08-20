@@ -8,6 +8,8 @@ export default function ProductDashboard() {
   const [editing, setEditing] = useState(null);
   const [form, setForm] = useState({});
   const [search, setSearch] = useState("");
+    const [loading, setLoading] = useState(true);
+  
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   // Fetch all products
@@ -18,7 +20,9 @@ export default function ProductDashboard() {
       setProducts(data);
     } catch (err) {
       toast.error("Failed to load products");
-    }
+    }finally {
+        setLoading(false);
+      }
   };
 
   useEffect(() => {
@@ -80,6 +84,14 @@ export default function ProductDashboard() {
       p.name.toLowerCase().includes(search.toLowerCase()) ||
       p.category.toLowerCase().includes(search.toLowerCase())
   );
+
+   if (loading) {
+    return (
+      <div className="min-h-[92vh] flex items-center justify-center bg-gradient-to-r from-gray-700 to-green-800">
+        <div className="animate-spin rounded-full h-24 w-24 border-t-4 border-b-4 border-white"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-r from-purple-800  to-gray-800 p-6">
