@@ -58,7 +58,7 @@ function Wishlist() {
           {/* Product Image */}
           {item.image && (
             <img
-              src={`http://localhost:5000${item.image}`}
+              src={`${process.env.NEXT_PUBLIC_API_URL}${item.image}`}
               alt={item.name}
               className="w-full h-40 object-contain mb-3"
             />
