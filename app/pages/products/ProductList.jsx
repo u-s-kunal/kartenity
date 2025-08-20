@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addToCart, removeFromCart } from "../../main/cartSlice";
+import { addToCart } from "../../main/cartSlice";
 import { useSearchParams, useRouter } from "next/navigation";
 import { setProducts } from "../../main/productSlice";
 import { addToWish, removeFromWish } from "../../main/wishlistSlice";
@@ -10,6 +10,7 @@ import { addToWish, removeFromWish } from "../../main/wishlistSlice";
 function ProductList() {
   const dispatch = useDispatch();
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [sortOption, setSortOption] = useState("relevance");
   const [priceFilter, setPriceFilter] = useState("all");
   const router = useRouter();
@@ -24,6 +25,8 @@ function ProductList() {
       } catch (err) {
         console.error("Error fetching products:", err);
         setError(err.message || "Something went wrong");
+      } finally {
+        setLoading(false);
       }
     };
     fetchProducts();
@@ -78,6 +81,14 @@ function ProductList() {
     }
     localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-[92vh] flex items-center justify-center bg-gradient-to-r from-gray-700 to-green-600">
+        <div className="animate-spin rounded-full h-24 w-24 border-t-4 border-b-4 border-yellow-400"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-[92vh] p-4 bg-gradient-to-r from-gray-700 to-green-600">
@@ -172,22 +183,16 @@ function ProductList() {
                   </button>
                 </div>
 
-               <button
-                onClick={(e) => {
-                  e.stopPropagation();
-
-                  // If product not in cart, add it
-                  if (!cartItem) {
-                    dispatch(addToCart(product));
-                  }
-                  // Redirect to checkout page immediately
-                  router.push("/pages/checkout");
-                }}
-                className="text-white text-bold rounded-2xl px-3 w-full bg-yellow-500 py-1 transition-all mt-1 hover:bg-yellow-700"
-              >
-                Buy Now
-              </button>
-
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (!cartItem) dispatch(addToCart(product));
+                    router.push("/pages/checkout");
+                  }}
+                  className="text-white text-bold rounded-2xl px-3 w-full bg-yellow-500 py-1 transition-all mt-1 hover:bg-yellow-700"
+                >
+                  Buy Now
+                </button>
               </div>
             );
           })}
