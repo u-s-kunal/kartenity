@@ -137,7 +137,7 @@ function ProductList() {
               >
                 <button
                   onClick={(e) => toggleWishlist(e, product)}
-                  className="absolute top-2 px-1 right-2 text-2xl text-red-500 bg-black rounded-full"
+                  className="absolute top-2 px-1 right-2 text-2xl text-red-500 bg-neutral-400 rounded-full"
                 >
                   {isInWishlist(product._id) ? "❤️" : "🤍"}
                 </button>

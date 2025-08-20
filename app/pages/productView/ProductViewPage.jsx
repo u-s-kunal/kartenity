@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { addToCart, removeFromCart } from "../../main/cartSlice";
 import { useSearchParams, useRouter } from "next/navigation";
+import { addToWish, removeFromWish } from "../../main/wishlistSlice";
+
 
 // Helper: format INR
 const formatINR = (num) =>
@@ -16,11 +18,18 @@ const ProductViewPage = () => {
   const dispatch = useDispatch();
   const searchParams = useSearchParams();
   const productId = searchParams.get("id");
+  const wishlist = useSelector((state) => state.wishlist) || [];
+  
 
   const products = useSelector((state) => state.products) || [];
+
   const cart = useSelector((state) => state.cart) || [];
 
+  const isInWishlist = (productId) =>
+    wishlist?.some((item) => item._id === productId);
+
   const product = products.find((p) => p._id === productId);
+
   const cartItem = cart.find((item) => item._id === product?._id);
 
   const [mainImage, setMainImage] = useState("");
@@ -38,6 +47,19 @@ const ProductViewPage = () => {
       </div>
     );
   }
+
+  const toggleWishlist = (e, product) => {
+      e.stopPropagation();
+      let updatedWishlist;
+      if (isInWishlist(product._id)) {
+        updatedWishlist = wishlist.filter((item) => item._id !== product._id);
+        dispatch(removeFromWish(product._id));
+      } else {
+        updatedWishlist = [...wishlist, product];
+        dispatch(addToWish(product));
+      }
+      localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
+    };
 
   // Price & Discount Handling
   const price = product.price;
@@ -185,14 +207,14 @@ const ProductViewPage = () => {
           </div>
 
           {/* Cart Buttons */}
-          <div className="flex gap-2 md:w-[40%] w-full">
+          <div className=" block md:flex gap-6 justify-center items-center  ">
             <button
               onClick={() => dispatch(addToCart(product))}
               disabled={product.stock === 0}
               className={`flex-1 px-6 py-3 rounded-full font-semibold transition ${
                 cartItem
-                  ? "bg-green-600 hover:bg-green-700"
-                  : "bg-indigo-600 hover:bg-indigo-700"
+                  ? "bg-green-600 hover:bg-green-700 w-full m-2 "
+                  : "bg-indigo-600 hover:bg-indigo-700 w-full m-2 "
               } ${product.stock === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
             >
               {cartItem
@@ -205,11 +227,18 @@ const ProductViewPage = () => {
             {cartItem && (
               <button
                 onClick={() => dispatch(removeFromCart(product._id))}
-                className="flex-1 px-6 py-3 rounded-full bg-red-600 hover:bg-red-700 font-semibold transition"
+                className="flex-1 px-6 py-3 rounded-full bg-red-600 hover:bg-red-700 font-semibold transition w-full m-2 "
               >
                 Remove Item
               </button>
             )}
+
+            <button
+                  onClick={(e) => toggleWishlist(e, product)}
+                  className="flex-1 px-6 py-3 rounded-full bg-yellow-600 hover:bg-red-700 font-semibold transition w-full m-2 "
+                >
+                {isInWishlist(product._id) ? "Remove from Wishlist" : "Add to Wishlist"}         
+                </button>
           </div>
         </div>
       </div>
