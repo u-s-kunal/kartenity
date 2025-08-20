@@ -1,164 +1,202 @@
 "use client";
 
-import React, { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import OrderManager from "../OrderManager"; // import the new component
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
-function Dashboard() {
-  // --- Product Form states ---
-  const [name, setName] = useState("");
-  const [category, setCategory] = useState("");
-  const [price, setPrice] = useState("");
-  const [description, setDescription] = useState("");
-  const [preview, setPreview] = useState("");
-  const [selectedFile, setSelectedFile] = useState(null);
+export default function ProductDashboard() {
+  const [products, setProducts] = useState([]);
+  const [editing, setEditing] = useState(null);
+  const [form, setForm] = useState({});
+  const [search, setSearch] = useState("");
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-  // --- Handlers for product form ---
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file && file.type.startsWith("image/")) {
-      setSelectedFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result);
-      reader.readAsDataURL(file);
-    } else {
-      alert("Please select a valid image file.");
+  // Fetch all products
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/products`);
+      const data = await res.json();
+      setProducts(data);
+    } catch (err) {
+      toast.error("Failed to load products");
     }
   };
 
-  const handleProductSubmit = async (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
-    if (!selectedFile) {
-      alert("Please select an image file.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("category", category);
-    formData.append("price", price);
-    formData.append("description", description);
-    formData.append("image", selectedFile);
-
+  // Handle Delete
+  const handleDelete = async (id) => {
+    if (!confirm("Delete this product?")) return;
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`, {
-        method: "POST",
+      const res = await fetch(`${API_URL}/api/products/${id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error();
+      setProducts(products.filter((p) => p._id !== id));
+      toast.success("Product deleted");
+    } catch {
+      toast.error("Error deleting product");
+    }
+  };
+
+  // Start Editing
+  const startEdit = (product) => {
+    setEditing(product._id);
+    setForm({ ...product });
+  };
+
+  // Handle Update
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      const formData = new FormData();
+      formData.append("name", form.name);
+      formData.append("price", form.price);
+      formData.append("category", form.category);
+      formData.append("description", form.description);
+      if (form.image instanceof File) {
+        formData.append("image", form.image);
+      }
+
+      const res = await fetch(`${API_URL}/api/products/${editing}`, {
+        method: "PUT",
         body: formData,
       });
 
-      if (!res.ok) throw new Error("Failed to add product");
+      if (!res.ok) throw new Error();
+      toast.success("Product updated");
 
-      toast.success("Product added successfully!");
-
-      // Reset form
-      setName("");
-      setCategory("");
-      setPrice("");
-      setDescription("");
-      setSelectedFile(null);
-      setPreview("");
-      document.getElementById("fileInput").value = "";
-    } catch (err) {
-      console.error("Error submitting form:", err.message);
-      toast.error("Something went wrong while adding product.");
+      setEditing(null);
+      fetchProducts();
+    } catch {
+      toast.error("Update failed");
     }
   };
 
+  // Filter products by name or category
+  const filteredProducts = products.filter(
+    (p) =>
+      p.name.toLowerCase().includes(search.toLowerCase()) ||
+      p.category.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
-    <div className="min-h-[92vh] flex flex-col md:flex-row items-start justify-center gap-8 p-6 bg-gradient-to-r from-sky-600 to-red-500">
-      <ToastContainer />
-
-      {/* --- Product Upload Card --- */}
-      <div className="bg-transparent rounded-4xl shadow-2xl p-8 w-full max-w-md">
-        <h1 className="text-3xl font-semibold text-center text-white mb-6">
-          Add New Product
-        </h1>
-        <form
-          onSubmit={handleProductSubmit}
-          className="space-y-4 flex flex-col items-center"
-        >
-          <input
-            type="text"
-            className="w-full p-3 border border-gray-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            placeholder="Product Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-
-          <input
-            type="number"
-            className="w-full p-3 border border-gray-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            placeholder="Price"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            required
-          />
-
-          <textarea
-            className="w-full p-3 border border-gray-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            placeholder="Description"
-            rows="3"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-          />
-
-          <select
-            className="w-full p-3 border border-gray-300 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            required
-          >
-            <option value="">Select Category</option>
-            <option value="Electronics">Electronics</option>
-            <option value="Books">Books</option>
-            <option value="Accessories">Accessories</option>
-            <option value="Stationary">Stationary</option>
-            <option value="Beauty">Beauty</option>
-            <option value="Fashion">Fashion</option>
-            <option value="Appliances">Appliances</option>
-            <option value="Home & Kitchen">Home & Kitchen</option>
-            <option value="Vehicles">Vehicles</option>
-            <option value="Bathroom">Bathroom</option>
-            <option value="Cleaning">Cleaning</option>
-            <option value="Groceries">Groceries</option>
-            <option value="Jewellery">Jewellery</option>
-            <option value="Others">Others</option>
-          </select>
-
-          <input
-            type="file"
-            accept="image/*"
-            id="fileInput"
-            className="w-full bg-white text-black file:mr-4 file:py-2 file:px-4 file:border file:rounded-lg file:border-gray-300 file:text-sm file:font-semibold file:bg-indigo-100 hover:file:bg-indigo-200"
-            onChange={handleImageChange}
-            required
-          />
-
-          {preview && (
-            <img
-              src={preview}
-              alt="Preview"
-              className="w-full h-48 object-contain rounded-md border border-gray-300"
-            />
-          )}
-
-          <button
-            type="submit"
-            className="w-full bg-green-700 text-white p-3 rounded-lg hover:bg-indigo-700 transition-all duration-200"
-          >
-            Add Product
-          </button>
-        </form>
+    <div className="min-h-screen w-full bg-gradient-to-r from-purple-800  to-gray-800 p-6">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+        <h2 className="text-3xl font-bold text-white drop-shadow">
+          Product Dashboard
+        </h2>
+        <input
+          type="text"
+          placeholder="Search by name or category..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full sm:w-64 border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 text-white"
+        />
       </div>
 
-      {/* --- Order Manager Component --- */}
-      <OrderManager />
+      {filteredProducts.length === 0 ? (
+        <p className="text-white text-center mt-6">No products found</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {filteredProducts.map((p) => (
+            <div
+              key={p._id}
+              className="backdrop-blur-md bg-white/20 border border-white/30 rounded-2xl shadow-lg p-4 flex flex-col"
+            >
+              <img
+                src={`${API_URL}${p.image}`}
+                alt={p.name}
+                className="w-full h-48 object-contain rounded-lg mb-3 bg-white/10 p-1"
+              />
+              <h3 className="text-lg font-semibold text-white">{p.name}</h3>
+              <p className="text-sm text-gray-200">{p.category}</p>
+              <p className="text-xl font-bold text-yellow-300 mt-2">
+                ₹{p.price}
+              </p>
+              <div className="flex gap-2 mt-4">
+                <button
+                  onClick={() => startEdit(p)}
+                  className="flex-1 bg-blue-500/80 hover:bg-blue-600 text-white py-1 rounded-lg"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(p._id)}
+                  className="flex-1 bg-red-500/80 hover:bg-red-600 text-white py-1 rounded-lg"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Edit Modal */}
+      {editing && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <form
+            onSubmit={handleUpdate}
+            className="bg-white p-6 rounded-xl shadow-lg w-96 flex flex-col gap-3"
+          >
+            <h3 className="text-xl font-bold">Edit Product</h3>
+            <input
+              type="text"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              className="border p-2 rounded"
+              required
+            />
+            <input
+              type="number"
+              value={form.price}
+              onChange={(e) => setForm({ ...form, price: e.target.value })}
+              className="border p-2 rounded"
+              required
+            />
+            <input
+              type="text"
+              value={form.category}
+              onChange={(e) => setForm({ ...form, category: e.target.value })}
+              className="border p-2 rounded"
+              required
+            />
+            <textarea
+              value={form.description}
+              onChange={(e) =>
+                setForm({ ...form, description: e.target.value })
+              }
+              className="border p-2 rounded"
+              required
+            />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) =>
+                setForm({ ...form, image: e.target.files[0] })
+              }
+              className="border p-2 rounded"
+            />
+            <div className="flex justify-end gap-2 mt-3">
+              <button
+                type="button"
+                onClick={() => setEditing(null)}
+                className="px-3 py-1 bg-gray-400 text-white rounded"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-3 py-1 bg-green-600 text-white rounded"
+              >
+                Save
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   );
 }
-
-export default Dashboard;

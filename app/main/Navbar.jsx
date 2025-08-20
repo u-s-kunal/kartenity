@@ -66,7 +66,7 @@ export default function Navbar() {
           />
           <NavLink href="/pages/contact" icon={<Contact size={18} />} label="Contact" />
           <NavLink href="/pages/orders" icon={<BoxIcon size={18} />} label="Orders" />
-          <NavLink href="/pages/dashboard" icon={<PlusIcon size={18} />} label="Dashboard" />
+          <NavLink href="/pages/productForm" icon={<PlusIcon size={18} />} label="Upload" />
             <NavLink href="/pages/wishlist" icon={<HeartPlusIcon size={18} />} label="wishlist" />
             </div>
         </ul>
@@ -89,7 +89,7 @@ export default function Navbar() {
           <MobileLink href="/" label="Home" onClick={closeMenu} />
           <MobileLink href="/pages/contact" label="Contact" onClick={closeMenu} />
           <MobileLink href="/pages/orders" label="Orders" onClick={closeMenu} />
-          <MobileLink href="/pages/dashboard" label="Dashboard" onClick={closeMenu} />
+          <MobileLink href="/pages/productForm" label="Upload" onClick={closeMenu} />
           <MobileLink href="/pages/wishlist" label="wishlist" onClick={closeMenu} />
         </div>
       )}
