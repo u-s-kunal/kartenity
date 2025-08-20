@@ -8,6 +8,7 @@ import {
   BoxIcon,
   Contact,
   HeartPlusIcon,
+  HeartIcon,
   HomeIcon,
   Menu,
   PlusIcon,
@@ -39,12 +40,15 @@ export default function Navbar() {
         <div className="flex justify-between items-center w-full md:hidden  ">
           {pathname === "/" ? <Link href="/"><Image src="/logo.png" width={120} height={20} alt="KartEnity" className="invisible md:hidden "></Image> </Link> :  <Link href="/"><Image src="/logo.png" width={120} height={20} alt="KartEnity" className="visible mx-2"></Image> </Link>}
 
-        <div className="flex gap-3 p-3 right-0 ">
+          <div className="flex gap-3 p-3 right-0 items-center">
+            {/* WISHLIST ICON  */}
+            <Link href="/pages/wishlist"><HeartIcon /></Link>
+            {/* CART ICON */}
             <Link
               href="/pages/cart"
-              className="flex bg-gray-600 px-1 py-2 rounded-full items-center text-md font-md gap-1 text-white">
+              className="flex bg-gray-600 px-2 py-2 rounded-full items-center text-md font-md gap-1 text-white">
               <ShoppingCart size={22} />
-              <p className="bg-red-700 rounded-full px-2">{cartQuantity}</p>
+              {cartQuantity?    <p className=" rounded-full px-2">{cartQuantity}</p> : ""}
             </Link>
               
               <span onClick={toggleMenu} aria-label="Toggle Menu" className="p-1 mx-2  rounded border-none">
@@ -66,7 +70,7 @@ export default function Navbar() {
           />
           <NavLink href="/pages/contact" icon={<Contact size={18} />} label="Contact" />
           <NavLink href="/pages/orders" icon={<BoxIcon size={18} />} label="Orders" />
-          <NavLink href="/pages/productForm" icon={<PlusIcon size={18} />} label="Upload" />
+          <NavLink href="/pages/Dashboard" icon={<PlusIcon size={18} />} label="Dashboard" />
             <NavLink href="/pages/wishlist" icon={<HeartPlusIcon size={18} />} label="wishlist" />
             </div>
         </ul>
@@ -79,18 +83,17 @@ export default function Navbar() {
     
 
       {isOpen && (
-        <div className="md:hidden mt-3 space-y-3">
+        <div className="md:hidden mt-3 space-y-3 p-3">
           {pathname !== "/" && (
             <div className="px-3">
               <Search />
             </div>
           )}
-          
           <MobileLink href="/" label="Home" onClick={closeMenu} />
           <MobileLink href="/pages/contact" label="Contact" onClick={closeMenu} />
           <MobileLink href="/pages/orders" label="Orders" onClick={closeMenu} />
-          <MobileLink href="/pages/productForm" label="Upload" onClick={closeMenu} />
-          <MobileLink href="/pages/wishlist" label="wishlist" onClick={closeMenu} />
+          <MobileLink href="/pages/Dashboard" label="Dashboard" onClick={closeMenu} />
+         
         </div>
       )}
     </nav>

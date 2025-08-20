@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import OrderStatusBar from "@/app/pages/OrderStatusBar";
+import OrderStatusBar from "../orderStatusUpdate/OrderStatusBar";
 
 // INR formatter
 const formatINR = (num) =>

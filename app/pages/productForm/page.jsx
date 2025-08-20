@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import OrderManager from "../OrderManager"; // import the new component
+
 
 function productForm() {
   // --- Product Form states ---
@@ -154,9 +154,6 @@ function productForm() {
           </button>
         </form>
       </div>
-
-      {/* --- Order Manager Component --- */}
-      <OrderManager />
     </div>
   );
 }

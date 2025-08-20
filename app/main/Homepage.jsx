@@ -45,11 +45,11 @@ export default function HomePage() {
         </div>
 
         {/* Categories */}
-        <section className="categories p-4 w-full max-w-5xl text-center">
+        <section className="categories p-4 w-full max-w-5xl text-center ">
           <h2 className="text-xl sm:text-2xl font-semibold text-white mb-4 sm:mb-6">
             🛍️ Shop by Category
           </h2>
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 sm:gap-6">
+          <div className="flex flex-wrap gap-6 justify-center items-center">
             {categories.map((cat, index) => (
               <Link
                 key={index}
