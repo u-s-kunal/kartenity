@@ -15,5 +15,5 @@ export function middleware(req) {
 
 // ✅ Apply middleware only to dashboard routes
 export const config = {
-  matcher: ["/pages/Dashboard/:path*", "/pages/Dashboard"],
+  matcher: ["/pages/dashboard/:path*", "/pages/dashboard"],
 };

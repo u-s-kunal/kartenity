@@ -13,7 +13,7 @@ export default function LoginPage() {
     });
 
     if (res.ok) {
-      window.location.href = "/pages/Dashboard"; // redirect after login
+      window.location.href = "/pages/dashboard"; // redirect after login
     } else {
       alert("Invalid credentials");
     }
