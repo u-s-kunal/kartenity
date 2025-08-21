@@ -27,9 +27,28 @@ export default function DashboardHome() {
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-red-800  to-gray-700 flex flex-col items-center p-6">
-      <h1 className="text-4xl font-bold text-white mb-12 drop-shadow">
+
+      <div className="flex p-10 m-4  text-center items-center justify-between  w-full ">
+
+      <h1 className="text-4xl font-bold text-white  p-3 rounded-2xl drop-shadow">
        Admin Dashboard Panel
       </h1>
+      
+       <button
+            onClick={async () => {
+              await fetch("/api/logout", { method: "POST" });
+              window.location.href = "/pages/login";
+            }}
+            className="bg-yellow-600 hover:bg-gray-800 text-white mx-6  px-4 py-2 rounded-lg"
+          >
+            Logout
+      </button>
+      </div>
+      
+
+    
+
+
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 w-full max-w-6xl">
         {cards.map((card) => (
