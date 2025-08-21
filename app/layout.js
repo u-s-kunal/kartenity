@@ -3,6 +3,7 @@ import "/styles/globals.css";
 import Navbar from "./main/Navbar";
 import ReduxProvider from "./redux-provider"; // ✅ use this
 import Footer from "./main/Footer";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({
@@ -53,6 +54,7 @@ export default function RootLayout({ children }) {
         <ReduxProvider>
           <Navbar />
           {children}
+          <SpeedInsights />
           <Footer />
         </ReduxProvider>
       </body>
