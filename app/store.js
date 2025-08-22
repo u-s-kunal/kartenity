@@ -1,9 +1,9 @@
 "use client";
 
 import { configureStore } from "@reduxjs/toolkit";
-import productReducer from "./main/productSlice.jsx";
-import cartReducer from "./main/cartSlice.jsx";
-import whishlistReducer from "./main/wishlistSlice.jsx";
+import productReducer from "./main/slices/productSlice.jsx";
+import cartReducer from "./main/slices/cartSlice.jsx";
+import whishlistReducer from "./main/slices/wishlistSlice.jsx";
 
 export const store = configureStore({
   reducer: {

@@ -3,8 +3,8 @@
 import React, { useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
-import { addToCart } from "../../main/cartSlice";
-import { setProducts } from "../../main/productSlice";
+import { addToCart } from "../../main/slices/cartSlice";
+import { setProducts } from "../../main/slices/productSlice";
 import Fuse from "fuse.js";
 
 export default function SearchResults() {

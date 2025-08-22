@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
-import { removeFromCart } from "../../main/cartSlice";
+import { removeFromCart } from "../../main/slices/cartSlice";
 import { ShoppingCart } from "lucide-react";
 
 function Cart() {

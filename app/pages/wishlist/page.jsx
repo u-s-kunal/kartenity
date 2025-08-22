@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { removeFromWish } from "../../main/wishlistSlice";
-import { addToCart } from "../../main/cartSlice"; // ← ensure this exists
+import { removeFromWish } from "../../main/slices/wishlistSlice";
+import { addToCart } from "../../main/slices/cartSlice"; // ← ensure this exists
 
 function Wishlist() {
   const [wishlist, setLocalWishlist] = useState([]);

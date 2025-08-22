@@ -2,10 +2,10 @@
 
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addToCart } from "../../main/cartSlice";
+import { addToCart } from "../../main/slices/cartSlice";
 import { useSearchParams, useRouter } from "next/navigation";
-import { setProducts } from "../../main/productSlice";
-import { addToWish, removeFromWish } from "../../main/wishlistSlice";
+import { setProducts } from "../../main/slices/productSlice";
+import { addToWish, removeFromWish } from "../../main/slices/wishlistSlice";
 
 function ProductList() {
   const dispatch = useDispatch();
